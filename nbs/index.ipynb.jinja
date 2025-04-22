@@ -1,0 +1,107 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "2e790b13",
+   "metadata": {},
+   "source": [
+    "# {{project_name}}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "726afb3a",
+   "metadata": {
+    "lines_to_next_cell": 1
+   },
+   "outputs": [],
+   "source": [
+    "#|hide\n",
+    "import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e53bf594",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#|hide\n",
+    "import {{project_name_slug}} as proj"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e32c8775",
+   "metadata": {},
+   "source": [
+    "# Usage\n",
+    "\n",
+    "To run all all scripts in `core` in sequence, run\n",
+    "\n",
+    "```python\n",
+    "{{project_name_slug}}.core.run_all()\n",
+    "```\n",
+    "\n",
+    "from within Python, or\n",
+    "\n",
+    "```\n",
+    "python -m {{project_name_slug}}.cli.core\n",
+    "```\n",
+    "\n",
+    "from the terminal."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6d5cc793",
+   "metadata": {},
+   "source": [
+    "# Development install instructions\n",
+    "\n",
+    "## Prerequisites\n",
+    "\n",
+    "- Install [uv](https://docs.astral.sh/uv/getting-started/installation/).\n",
+    "- Install [direnv](https://direnv.net/) to automatically load the project virtual environment when entering it.\n",
+    "    - Mac: `brew install direnv`\n",
+    "    - Linux: `curl -sfL https://direnv.net/install.sh | bash`\n",
+    "\n",
+    "## Setting up the environment\n",
+    "\n",
+    "Run the following:\n",
+    "\n",
+    "```bash\n",
+    "# CD into the root of the repo folder\n",
+    "uv sync # Installs the virtual environment at './.venv'\n",
+    "direnv allow # Allows the automatic running of the script './.envrc'\n",
+    "nbl install-hooks # Installs some git hooks that ensures that notebooks are added properly\n",
+    "uv pip install -e .\n",
+    "```\n",
+    "\n",
+    "You are now set up to develop the codebase.\n",
+    "\n",
+    "Further instructions:\n",
+    "\n",
+    "- To export notebooks run nbl export.\n",
+    "- To clean notebooks run nbl clean.\n",
+    "- To see other available commands run just nbl.\n",
+    "- To add a new dependency run uv add package-name. See the the uv documentation for more details.\n",
+    "- You need to git add all 'twinned' notebooks for the commit to be validated. For example, if you add nbs/my-nb.ipynb, you must also add pts/my-nb.pct.py."
+   ]
+  }
+ ],
+ "metadata": {
+  "jupytext": {
+   "cell_metadata_filter": "-all",
+   "main_language": "python",
+   "notebook_metadata_filter": "-all"
+  },
+  "language_info": {
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
