@@ -2,6 +2,7 @@
 project_name:
     type: str
     help: What is your project name (only alphanumeric characters allowed, and no whitespace)?
+    default: "{{_folder_name}}"
     validation: ^[a-zA-Z0-9]+$
     validation_message: Project name must contain only alphanumeric characters with no spaces
 
@@ -12,6 +13,7 @@ project_name_slug:
   when: false
 
 _tasks:
+  - "uvx --from nblite nbl export --export-pipeline 'pts->nbs'"
   - "uvx --from nblite nbl export"
   - "uvx --from nblite nbl readme"
   - "uv sync"
