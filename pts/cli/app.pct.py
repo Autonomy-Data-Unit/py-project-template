@@ -1,8 +1,8 @@
 # %% [markdown]
-# # utils
+# # app
 
 # %%
-#|default_exp utils
+#|default_exp cli.app
 
 # %%
 #|hide
@@ -10,11 +10,8 @@ import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()
 
 # %%
 #|export
-import {{module_name_slug}} as proj
-from {{module_name_slug}} import const
-
+import typer
 
 # %%
 #|export
-def foo():
-    print("Hello")
+app = typer.Typer(invoke_without_command=True)

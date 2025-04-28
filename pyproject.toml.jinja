@@ -1,5 +1,5 @@
 [project]
-name = "{{project_name}}"
+name = "{{module_name}}"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -13,8 +13,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 ignore-vcs = true
-packages = ["{{project_name_slug}}"]
-include = ["{{project_name_slug}}/static/**"]
+packages = ["{{module_name_slug}}"]
+include = ["{{module_name_slug}}/static/**"]
 
 [dependency-groups]
 dev = [
@@ -23,4 +23,4 @@ dev = [
 ]
 
 [project.scripts]
-run-{{project_name}} = "{{project_name_slug}}.core:run_all"
+{{module_name}} = "{{module_name_slug}}.cli.app:app"

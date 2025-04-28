@@ -1,0 +1,66 @@
+# %% [markdown]
+# # main
+
+# %%
+#|default_exp cli.main
+
+# %%
+#|hide
+import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()
+
+# %%
+#|export
+import typer
+from typer import Argument, Option
+from typing_extensions import Annotated
+from types import FunctionType
+from typing import Callable, Union, List
+from pathlib import Path
+
+import {{module_name_slug}} as proj
+from {{module_name_slug}} import const
+from {{module_name_slug}}.cli.app import app
+
+
+# %% [markdown]
+# ## Main command
+
+# %%
+#|export
+@app.callback()
+def entrypoint(ctx: typer.Context):
+    if ctx.invoked_subcommand is not None: return
+    typer.echo(ctx.get_help())
+
+# %%
+# !{{module_name}}
+
+# %% [markdown]
+# ## `run-core`
+
+# %%
+#|export
+@app.command(name='run-core')
+def cli_run_core(
+):
+    """
+    Run all scripts in the `core` submodule in alphanumerical order
+    """
+    proj.core.run_all()
+
+# %% [markdown]
+# ## `a-sub-command`
+
+# Uncomment the following cell to add a subcommand to the CLI.
+
+# %%
+#|export
+# @app.command(name='run-core')
+# def cli_a_sub_command(
+#     postional_arg: Annotated[Union[List[str], None], Argument(help="This will be displayed in the help message.")] = None,
+#     optional_arg: Annotated[Union[str,None], Option("-r", "--root", help="This is an optional argument.")] = None,
+# ):
+#     """
+#     This is a subcommand. This text will be displayed in the help message.
+#     """
+#     print("Hello from a subcommand.")

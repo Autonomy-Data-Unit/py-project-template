@@ -1,11 +1,11 @@
 from pathlib import Path
 import boto3
-from {{project_name_slug}} import const
+from {{module_name_slug}} import const
 import tarfile
 import tempfile
 
 bucket_name = 'adu-project-data'
-s3_path = '{{project_name}}/store_compressed.tar.gz'
+s3_path = '{{module_name}}/store_compressed.tar.gz'
 
 # Create a temporary file to store the tar.gz archive
 with tempfile.NamedTemporaryFile(delete=False, suffix='.tar.gz') as temp_file:

@@ -1,5 +1,5 @@
 # %% [markdown]
-# # {{project_name}}
+# # {{module_name}}
 
 # %%
 #|hide
@@ -7,7 +7,7 @@ import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()
 
 # %%
 #|hide
-import {{project_name_slug}} as proj
+import {{module_name_slug}} as proj
 
 # %% [markdown]
 # # Usage
@@ -15,13 +15,13 @@ import {{project_name_slug}} as proj
 # To run all all scripts in `core` in sequence, run
 #
 # ```python
-# {{project_name_slug}}.core.run_all()
+# {{module_name_slug}}.core.run_all()
 # ```
 #
 # from within Python, or
 #
 # ```
-# run-{{project-name}}
+# {{module_name}} run-core
 # ```
 #
 # from the terminal.
@@ -41,19 +41,18 @@ import {{project_name_slug}} as proj
 # Run the following:
 #
 # ```bash
-# # CD into the root of the repo folder
+# # In the root of the repo folder
 # uv sync # Installs the virtual environment at './.venv'
 # direnv allow # Allows the automatic running of the script './.envrc'
-# nbl install-hooks # Installs some git hooks that ensures that notebooks are added properly
-# uv pip install -e .
+# nbl install-hooks # Installs a git hooks that ensures that notebooks are added properly
 # ```
 #
 # You are now set up to develop the codebase.
 #
 # Further instructions:
 #
-# - To export notebooks run nbl export.
-# - To clean notebooks run nbl clean.
-# - To see other available commands run just nbl.
-# - To add a new dependency run uv add package-name. See the the uv documentation for more details.
-# - You need to git add all 'twinned' notebooks for the commit to be validated. For example, if you add nbs/my-nb.ipynb, you must also add pts/my-nb.pct.py.
+# - To export notebooks run `nbl export`.
+# - To clean notebooks run `nbl clean`.
+# - To see other available commands run just `nbl`.
+# - To add a new dependency run `uv add package-name`. See the the [uv documentation](https://docs.astral.sh/uv/) for more details.
+# - You need to `git add` all 'twinned' notebooks for the commit to be validated by the git-hook. For example, if you add `nbs/my-nb.ipynb`, you must also add `pts/my-nb.pct.py`.

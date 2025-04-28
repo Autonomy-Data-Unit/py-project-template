@@ -1,15 +1,14 @@
 # questions
-project_name:
+module_name:
     type: str
-    help: What is your project name (only alphanumeric characters allowed, and no whitespace)?
-    default: "{{_folder_name}}"
+    help: Enter the module name (only alphanumeric characters allowed, and no whitespace)
     validation: ^[a-zA-Z0-9]+$
-    validation_message: Project name must contain only alphanumeric characters with no spaces
+    validation_message: Module name must contain only alphanumeric characters with no spaces
 
-project_name_slug:
+module_name_slug:
   type: str
-  default: "{{ project_name | replace('-', '_') }}"
-  help: Slugified project name
+  default: "{{ module_name | replace('-', '_') }}"
+  help: Slugified module name
   when: false
 
 _tasks:

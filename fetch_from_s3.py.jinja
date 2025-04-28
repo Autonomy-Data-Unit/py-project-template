@@ -1,13 +1,13 @@
 import boto3
 from pathlib import Path
-from {{project_name_slug}} import const
+from {{module_name_slug}} import const
 import tempfile
 import tarfile
 import shutil
 import os
 
 bucket_name = 'adu-project-data'
-s3_path = '{{project_name}}/store_compressed.tar.gz'
+s3_path = '{{module_name}}/store_compressed.tar.gz'
 
 s3 = boto3.client('s3')
 
