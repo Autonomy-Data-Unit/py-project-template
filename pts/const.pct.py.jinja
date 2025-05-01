@@ -18,6 +18,8 @@ import {{module_name_slug}} as proj
 #|export
 root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
 store_path = resources.files(f'{proj.__name__}.store').joinpath('').resolve()
+scripts_path = resources.files(f'{proj.__name__}.scripts').joinpath('').resolve()
+
 caches_path = Path(store_path, 'caches')
 data_path = Path(store_path, 'data')
 misc_path = Path(store_path, 'misc')

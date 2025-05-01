@@ -14,7 +14,10 @@ build-backend = "hatchling.build"
 [tool.hatch.build]
 ignore-vcs = true
 packages = ["{{module_name_slug}}"]
-include = ["{{module_name_slug}}/static/**"]
+include = [
+    "{{module_name_slug}}/static/**",
+    "{{module_name_slug}}/scripts/**",
+]
 
 [dependency-groups]
 dev = [
