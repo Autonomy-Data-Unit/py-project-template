@@ -17,6 +17,6 @@ _tasks:
   - "uvx --from nblite nbl readme"
   - "direnv allow"
   - "uv lock --upgrade"
-  - "uv sync"
+  - "uv sync --all-extras"
   - "git init"
   - "uvx --from nblite nbl install-hooks"
