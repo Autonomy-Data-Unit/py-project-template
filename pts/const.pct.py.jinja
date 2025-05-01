@@ -17,8 +17,8 @@ import {{module_name_slug}} as proj
 # %%
 #|export
 root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
-store_path = resources.files(f'{proj.__name__}.store').joinpath('').resolve()
-scripts_path = resources.files(f'{proj.__name__}.scripts').joinpath('').resolve()
+store_path = resources.files(f'{proj.__name__}').joinpath('store').resolve()
+scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
 
 caches_path = Path(store_path, 'caches')
 data_path = Path(store_path, 'data')
@@ -29,6 +29,7 @@ output_path = Path(store_path, 'output')
 # %%
 #|export
 store_path.mkdir(parents=True, exist_ok=True)
+scripts_path.mkdir(parents=True, exist_ok=True)
 caches_path.mkdir(parents=True, exist_ok=True)
 data_path.mkdir(parents=True, exist_ok=True)
 misc_path.mkdir(parents=True, exist_ok=True)
