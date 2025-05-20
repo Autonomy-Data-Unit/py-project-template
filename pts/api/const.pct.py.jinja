@@ -35,3 +35,9 @@ data_path.mkdir(parents=True, exist_ok=True)
 misc_path.mkdir(parents=True, exist_ok=True)
 pre_output.mkdir(parents=True, exist_ok=True)
 output_path.mkdir(parents=True, exist_ok=True)
+
+# %%
+#|export
+import adulib, adulib.llm
+adulib.llm.set_call_log_save_path(store_path / 'call_log.jsonl')
+adulib.caching.set_default_cache_path(caches_path)
