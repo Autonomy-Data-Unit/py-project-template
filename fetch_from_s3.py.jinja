@@ -26,6 +26,16 @@ if os.path.exists(const.store_path):
         print("Fetch operation aborted.")
         exit()
 
+# Get the ETag of the uploaded file and save it
+s3 = boto3.client('s3')
+response = s3.head_object(Bucket=bucket_name, Key=s3_path)
+remote_etag = response['ETag'].strip('"')  # Remove the quotes from the ETag
+local_etag_path = Path('store_compressed_etag.txt')
+local_etag = local_etag_path.read_text() if local_etag_path.exists() else None
+if remote_etag == local_etag:
+    print("The directory is already up to date.")
+    exit()
+
 # Create a temporary file to store the downloaded tar.gz archive
 with tempfile.NamedTemporaryFile(delete=False, suffix='.tar.gz') as temp_file:
     temp_file_path = temp_file.name
@@ -40,3 +50,6 @@ with tempfile.NamedTemporaryFile(delete=False, suffix='.tar.gz') as temp_file:
     # Extract the tar.gz archive to const.store_path
     with tarfile.open(temp_file_path, "r:gz") as tar:
         tar.extractall(path=const.root_path)
+
+# Save the ETag of the downloaded file
+with open('store_compressed_etag.txt', 'w') as f: f.write(remote_etag)
