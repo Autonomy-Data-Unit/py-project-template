@@ -12,6 +12,8 @@ import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()
 #|export
 from pathlib import Path
 from importlib import resources
+import adulib, adulib.llm
+from dotenv import load_dotenv
 import {{module_name_slug}} as proj
 
 # %%
@@ -36,8 +38,17 @@ misc_path.mkdir(parents=True, exist_ok=True)
 pre_output.mkdir(parents=True, exist_ok=True)
 output_path.mkdir(parents=True, exist_ok=True)
 
+# %% [markdown]
+# Set up default caching and LLM call logging
+
 # %%
 #|export
-import adulib, adulib.llm
-adulib.llm.set_call_log_save_path(store_path / 'call_log.jsonl')
 adulib.caching.set_default_cache_path(caches_path / 'default')
+adulib.llm.set_call_log_save_path(store_path / 'call_log.jsonl')
+
+# %% [markdown]
+# Load environment variables
+
+# %%
+#|export
+load_dotenv()
