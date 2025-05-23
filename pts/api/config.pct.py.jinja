@@ -60,6 +60,8 @@ def set_config(field_key: str, field_value: str):
     by using dot notation in the field_key. For example, to update a field
     within a sub-configuration, use 'sub_config.field_name'.
 
+    Call `validate_config` after using to ensure that the model data is correct.
+
     Args:
         field_key (str): The key of the field to update. Can be a nested key
                          using dot notation.
