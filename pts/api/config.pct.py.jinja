@@ -35,12 +35,14 @@ class Config(BaseModel):
     output_path: Optional[str] = None
 
     @model_validator(mode='after')
-    def check_absolute_path(self):
+    def process_paths(self):
         fields = ['store_path', 'caches_path', 'data_path', 'misc_path', 'pre_output', 'output_path']
         for field_key in fields:
             field_value = getattr(self, field_key)
             if not isinstance(field_value, str): continue
             field_value = Path(field_value).expanduser()
+            if not field_value.is_absolute():
+                raise ValueError(f"The {field_key} must be an absolute path.")
             setattr(self, field_key, field_value.resolve().as_posix())
         return self
 
