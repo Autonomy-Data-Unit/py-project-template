@@ -21,7 +21,7 @@ import importlib
 import {{module_name_slug}} as proj
 from {{module_name_slug}} import const
 from {{module_name_slug}}.cli.app import app
-from {{module_name_slug}}.config import config, update_config_from_pairs
+from {{module_name_slug}}.config import config, update_config_from_pairs, validate_config
 
 
 # %% [markdown]
@@ -36,6 +36,7 @@ def entrypoint(
 ):
     if config_mods:
         update_config_from_pairs(config_mods)
+        validate_config()
         importlib.reload(const)
     if ctx.invoked_subcommand is None:
         typer.echo(ctx.get_help())

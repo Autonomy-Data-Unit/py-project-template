@@ -91,3 +91,8 @@ def update_config_from_pairs(key_value_pairs: list[str]):
     for key_value_pair in key_value_pairs:
         key, value = key_value_pair.split('=', 1)
         set_config(key, value)
+
+# %%
+#|export
+def validate_config():
+    Config.model_validate(config.model_dump())
