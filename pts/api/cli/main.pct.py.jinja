@@ -32,10 +32,14 @@ from {{module_name_slug}}.config import config, update_config_from_pairs, valida
 @app.callback()
 def entrypoint(
     ctx: typer.Context,
+    config_path: str = typer.Option(None, "--config-path", help="Path to config file."),
     config_mods: List[str] = typer.Option(None, "--config", "-c", help="Set config values. Use key=value pairs. Run `list-config` to see all available config variables.")
 ):
+    if config_path:
+        load_config_from_path(config_path)
     if config_mods:
         update_config_from_pairs(config_mods)
+    if config_path or config_mods:
         validate_config()
         importlib.reload(const)
     if ctx.invoked_subcommand is None:

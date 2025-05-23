@@ -46,11 +46,14 @@ class Config(BaseModel):
             setattr(self, field_key, field_value.resolve().as_posix())
         return self
 
-# %%
 #|export
+config = None
+def load_config_from_path(config_path: str):
+    global config
+    toml_config = toml.load(config_path)
+    config = Config.model_validate(toml_config)
 config_path = resources.files(f'{proj.__name__}').joinpath('assets/config.toml').resolve()
-toml_config = toml.load(config_path)
-config = Config.model_validate(toml_config)
+load_config_from_path(config_path)
 
 # %%
 #|export
