@@ -86,4 +86,5 @@ def update_config_from_pairs(key_value_pairs: list[str]):
 # %%
 #|export
 def validate_config():
-    Config.model_validate(config.model_dump())
+    global config
+    config = Config.model_validate(config.model_dump())
