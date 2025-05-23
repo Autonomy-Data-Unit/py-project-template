@@ -22,8 +22,7 @@ import {{module_name_slug}} as proj
 
 # %%
 #|export
-from {{module_name_slug}}.config import config as _config
-
+from {{module_name_slug}}.config import get_config
 
 # %% [markdown]
 # Set up paths
@@ -31,17 +30,18 @@ from {{module_name_slug}}.config import config as _config
 # %%
 #|export
 def _as_Path(p): return Path(p) if p else None
+config = get_config()
 
 root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
-store_path = _as_Path(_config.store_path) or resources.files(f'{proj.__name__}').joinpath('store').resolve()
+store_path = _as_Path(config.store_path) or resources.files(f'{proj.__name__}').joinpath('store').resolve()
 scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
 assets_path = resources.files(f'{proj.__name__}').joinpath('assets').resolve()
 
-caches_path = _as_Path(_config.caches_path) or store_path / 'caches'
-data_path = _as_Path(_config.data_path) or store_path / 'data'
-misc_path = _as_Path(_config.misc_path) or store_path / 'misc'
-pre_output = _as_Path(_config.pre_output) or store_path / 'pre_output'
-output_path = _as_Path(_config.output_path) or store_path / 'output'
+caches_path = _as_Path(config.caches_path) or store_path / 'caches'
+data_path = _as_Path(config.data_path) or store_path / 'data'
+misc_path = _as_Path(config.misc_path) or store_path / 'misc'
+pre_output = _as_Path(config.pre_output) or store_path / 'pre_output'
+output_path = _as_Path(config.output_path) or store_path / 'output'
 
 # %%
 #|export
