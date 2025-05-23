@@ -11,6 +11,12 @@ module_name_slug:
   help: Slugified module name
   when: false
 
+initial_commit:
+  type: bool
+  default: true
+  help: Whether to create an initial commit after setting up the repository
+  when: false
+
 _tasks:
   - "uvx --from nblite nbl export --export-pipeline 'pts->nbs'"
   - "uvx --from nblite nbl export"
@@ -21,3 +27,9 @@ _tasks:
   - "git init"
   - "uvx --from nblite nbl install-hooks"
   - "ln -s {{ module_name_slug }}/assets/config.toml ."
+  - "source .venv/bin/activate && nbl prepare"
+  - command: "git add --all && git reset */_scratch */api/core"
+    when: "{{ initial_commit }}"
+  - command: "git commit -m 'Repo created from template'"
+    when: "{{ initial_commit }}"
+  
