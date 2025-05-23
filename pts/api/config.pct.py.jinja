@@ -48,8 +48,6 @@ class Config(BaseModel):
             field_value = getattr(self, field_key)
             if not isinstance(field_value, str): continue
             field_value = Path(field_value).expanduser()
-            if not field_value.is_absolute():
-                raise ValueError(f"The path for field {field_key} is not absolute.")
             setattr(self, field_key, field_value.resolve().as_posix())
         return self
 
