@@ -1,0 +1,93 @@
+# %% [markdown]
+# # config
+
+# %%
+#|default_exp config
+
+# %%
+#|hide
+import nblite; from nblite import show_doc; nblite.nbl_export()
+import {{module_name_slug}}.config as this_module
+
+# %%
+#|export
+from importlib import resources
+import toml
+from typing import Optional
+from pydantic import BaseModel, ConfigDict, model_validator
+from pathlib import Path
+import {{module_name_slug}} as proj
+
+# %%
+#|export
+root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
+
+# %%
+#|export
+class SubConfig(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    name: str
+    value: str
+
+class Config(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+
+    store_path: Optional[str] = None
+    caches_path: Optional[str] = None
+    data_path: Optional[str] = None
+    misc_path: Optional[str] = None
+    pre_output: Optional[str] = None
+    output_path: Optional[str] = None
+    
+    sub_config: SubConfig = SubConfig(name='sub_config', value='sub_config_value')
+
+    @model_validator(mode='after')
+    def check_absolute_path(self):
+        fields = ['store_path', 'caches_path', 'data_path', 'misc_path', 'pre_output', 'output_path']
+        for field_key in fields:
+            field_value = getattr(self, field_key)
+            if not isinstance(field_value, str): continue
+            field_value = Path(field_value).expanduser()
+            if not field_value.is_absolute():
+                raise ValueError(f"The path for field {field_key} is not absolute.")
+            setattr(self, field_key, field_value.resolve().as_posix())
+        return self
+
+# %%
+#|export
+config_path = resources.files(f'{proj.__name__}').joinpath('assets/config.toml').resolve()
+toml_config = toml.load(config_path)
+config = Config.model_validate(toml_config)
+
+# %%
+#|export
+def set_config(field_key: str, field_value: str):
+    """
+    Update the configuration by setting a specified field to a new value.
+
+    This function allows updating nested fields within the configuration
+    by using dot notation in the field_key. For example, to update a field
+    within a sub-configuration, use 'sub_config.field_name'.
+
+    Args:
+        field_key (str): The key of the field to update. Can be a nested key
+                         using dot notation.
+        field_value (str): The new value to set for the specified field.
+
+    Raises:
+        AttributeError: If the specified field_key does not exist in the configuration.
+    """
+    def _set_config_helper(model, field_key: str, field_value: str):
+        if '.' in field_key:
+            field_parent_key, field_child_key = field_key.split('.', 1)
+            _set_config_helper(getattr(model, field_parent_key), field_child_key, field_value)
+            return
+        setattr(model, field_key, field_value)
+    _set_config_helper(config, field_key, field_value)
+
+# %%
+#|export
+def update_config_from_pairs(key_value_pairs: list[str]):
+    for key_value_pair in key_value_pairs:
+        key, value = key_value_pair.split('=', 1)
+        set_config(key, value)

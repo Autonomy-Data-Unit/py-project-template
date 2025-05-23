@@ -11,6 +11,10 @@ import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()
 # %%
 #|export
 from pathlib import Path
+import toml
+from typing import Optional
+from pydantic import BaseModel, ConfigDict, model_validator
+from pathlib import Path
 from importlib import resources
 import adulib, adulib.llm
 from dotenv import load_dotenv
@@ -18,15 +22,26 @@ import {{module_name_slug}} as proj
 
 # %%
 #|export
-root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
-store_path = resources.files(f'{proj.__name__}').joinpath('store').resolve()
-scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
+from {{module_name_slug}}.config import config as _config
 
-caches_path = Path(store_path, 'caches')
-data_path = Path(store_path, 'data')
-misc_path = Path(store_path, 'misc')
-pre_output = Path(store_path, 'pre_output')
-output_path = Path(store_path, 'output')
+
+# %% [markdown]
+# Set up paths
+
+# %%
+#|export
+def _as_Path(p): return Path(p) if p else None
+
+root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
+store_path = _as_Path(_config.store_path) or resources.files(f'{proj.__name__}').joinpath('store').resolve()
+scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
+assets_path = resources.files(f'{proj.__name__}').joinpath('assets').resolve()
+
+caches_path = _as_Path(_config.caches_path) or store_path / 'caches'
+data_path = _as_Path(_config.data_path) or store_path / 'data'
+misc_path = _as_Path(_config.misc_path) or store_path / 'misc'
+pre_output = _as_Path(_config.pre_output) or store_path / 'pre_output'
+output_path = _as_Path(_config.output_path) or store_path / 'output'
 
 # %%
 #|export

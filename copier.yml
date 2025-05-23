@@ -20,3 +20,4 @@ _tasks:
   - "uv sync --all-extras"
   - "git init"
   - "uvx --from nblite nbl install-hooks"
+  - "ln -s {{ module_name_slug }}/assets/config.toml ."

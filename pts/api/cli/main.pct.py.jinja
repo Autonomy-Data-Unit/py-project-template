@@ -16,10 +16,12 @@ from typing_extensions import Annotated
 from types import FunctionType
 from typing import Callable, Union, List
 from pathlib import Path
+import importlib
 
 import {{module_name_slug}} as proj
 from {{module_name_slug}} import const
 from {{module_name_slug}}.cli.app import app
+from {{module_name_slug}}.config import config, update_config_from_pairs
 
 
 # %% [markdown]
@@ -28,9 +30,16 @@ from {{module_name_slug}}.cli.app import app
 # %%
 #|export
 @app.callback()
-def entrypoint(ctx: typer.Context):
-    if ctx.invoked_subcommand is not None: return
-    typer.echo(ctx.get_help())
+def entrypoint(
+    ctx: typer.Context,
+    config_mods: List[str] = typer.Option(None, "--config", "-c", help="Set config values. Use key=value pairs. Run `list-config` to see all available config variables.")
+):
+    if config_mods:
+        update_config_from_pairs(config_mods)
+        importlib.reload(const)
+    if ctx.invoked_subcommand is None:
+        typer.echo(ctx.get_help())
+
 
 # %%
 # !{{module_name}}
@@ -48,9 +57,48 @@ def cli_run_core(
     """
     proj.core.run_all()
 
+
+# %% [markdown]
+# ## `list-config`
+
+# %%
+#|export
+@app.command(name='list-config')
+def cli_list_config(
+):
+    """
+    List all config variables.
+    """
+    from rich.table import Table
+    from rich.console import Console
+    from rich.markup import escape
+    from pydantic import BaseModel
+
+    table = Table(title=f"{proj.__name__} configuration schema")
+
+    table.add_column("Config key", justify="left", style="cyan", no_wrap=True)
+    table.add_column("Type", justify="left", style="magenta")
+
+    def add_fields(field_key_prefix, model_class):
+        for field_key, field_type in model_class.__annotations__.items():
+            if issubclass(field_type, BaseModel):
+                add_fields(field_key, field_type)
+                continue
+            _field_key = f'{field_key_prefix}.{field_key}' if field_key_prefix else field_key
+            table.add_row(escape(_field_key), escape(str(field_type)))
+
+    add_fields("", config.__class__)
+
+    console = Console()
+    console.print(table)
+
+
+# %%
+cli_list_config()
+
 # %% [markdown]
 # ## `a-sub-command`
-
+#
 # Uncomment the following cell to add a subcommand to the CLI.
 
 # %%
