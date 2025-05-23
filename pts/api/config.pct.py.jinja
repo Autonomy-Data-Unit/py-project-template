@@ -24,11 +24,6 @@ root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
 
 # %%
 #|export
-class SubConfig(BaseModel):
-    model_config = ConfigDict(extra='forbid')
-    name: str
-    value: str
-
 class Config(BaseModel):
     model_config = ConfigDict(extra='forbid')
 
@@ -38,8 +33,6 @@ class Config(BaseModel):
     misc_path: Optional[str] = None
     pre_output: Optional[str] = None
     output_path: Optional[str] = None
-    
-    sub_config: SubConfig = SubConfig(name='sub_config', value='sub_config_value')
 
     @model_validator(mode='after')
     def check_absolute_path(self):
