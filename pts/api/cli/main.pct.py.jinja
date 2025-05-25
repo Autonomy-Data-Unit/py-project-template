@@ -21,7 +21,7 @@ import importlib
 import {{module_name_slug}} as proj
 from {{module_name_slug}} import const
 from {{module_name_slug}}.cli.app import app
-from {{module_name_slug}}.config import config, update_config_from_pairs, validate_config
+from {{module_name_slug}}.config import get_config, update_config_from_pairs, validate_config
 
 
 # %% [markdown]
@@ -92,7 +92,7 @@ def cli_list_config(
             _field_key = f'{field_key_prefix}.{field_key}' if field_key_prefix else field_key
             table.add_row(escape(_field_key), escape(str(field_type)))
 
-    add_fields("", config.__class__)
+    add_fields("", get_config().__class__)
 
     console = Console()
     console.print(table)
