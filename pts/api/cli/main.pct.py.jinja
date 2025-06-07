@@ -97,6 +97,16 @@ def cli_list_config(
     console = Console()
     console.print(table)
 
+# %%
+#|export
+@app.command(name='config-path')
+def cli_config_path(
+):
+    """
+    Get the path to the configuration file.
+    """
+    from repos_to_obsidian_notes.config import config_path
+    print(config_path)
 
 # %%
 cli_list_config()
