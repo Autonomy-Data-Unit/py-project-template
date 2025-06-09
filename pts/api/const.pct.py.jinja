@@ -22,36 +22,24 @@ import {{module_name_slug}} as proj
 
 # %%
 #|export
-from {{module_name_slug}}.config import get_config
+from {{module_name_slug}}.config import PathConfig, Config, get_config
 
 # %% [markdown]
 # Set up paths
 
 # %%
 #|export
-def _as_Path(p): return Path(p) if p else None
+# Automaticlally set store paths based on the config
 config = get_config()
-
-root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
-store_path = _as_Path(config.store_path) or resources.files(f'{proj.__name__}').joinpath('store').resolve()
-scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
-assets_path = resources.files(f'{proj.__name__}').joinpath('assets').resolve()
-
-caches_path = _as_Path(config.caches_path) or store_path / 'caches'
-data_path = _as_Path(config.data_path) or store_path / 'data'
-misc_path = _as_Path(config.misc_path) or store_path / 'misc'
-pre_output = _as_Path(config.pre_output) or store_path / 'pre_output'
-output_path = _as_Path(config.output_path) or store_path / 'output'
+for field in Config.model_fields:
+    if not issubclass(Config.model_fields[field].annotation, PathConfig): continue
+    locals()[field] = config.get_path(field)
+    locals()[field].mkdir(parents=True, exist_ok=True)
 
 # %%
 #|export
-store_path.mkdir(parents=True, exist_ok=True)
-scripts_path.mkdir(parents=True, exist_ok=True)
-caches_path.mkdir(parents=True, exist_ok=True)
-data_path.mkdir(parents=True, exist_ok=True)
-misc_path.mkdir(parents=True, exist_ok=True)
-pre_output.mkdir(parents=True, exist_ok=True)
-output_path.mkdir(parents=True, exist_ok=True)
+scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
+assets_path = resources.files(f'{proj.__name__}').joinpath('assets').resolve()
 
 # %% [markdown]
 # Set up default caching and LLM call logging

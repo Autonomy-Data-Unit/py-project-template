@@ -13,8 +13,8 @@ import {{module_name_slug}}.config as this_module
 #|export
 from importlib import resources
 import toml
-from typing import Optional
-from pydantic import BaseModel, ConfigDict, model_validator
+from typing import Optional, Any
+from pydantic import BaseModel, ConfigDict, model_validator, Field
 from pathlib import Path
 import {{module_name_slug}} as proj
 
@@ -24,27 +24,38 @@ root_path = resources.files(f'{proj.__name__}').joinpath('').resolve()
 
 # %%
 #|export
+class PathConfig(BaseModel):
+    parent: Optional[str] = None
+    path: Path
+    
+    @model_validator(mode='before')
+    @classmethod
+    def process_path(cls, data: Any) -> Any:
+        if isinstance(data, str):
+            data = {'path': data}
+        data['path'] = Path(data['path'])
+        if not data.get('parent') and not Path(data['path']).is_absolute(): 
+            raise ValueError(f"The path '{data}' must be an absolute path.")
+        return data
+
+
+# %%
+#|export
 class Config(BaseModel):
     model_config = ConfigDict(extra='forbid')
-
-    store_path: Optional[str] = None
-    caches_path: Optional[str] = None
-    data_path: Optional[str] = None
-    misc_path: Optional[str] = None
-    pre_output: Optional[str] = None
-    output_path: Optional[str] = None
-
-    @model_validator(mode='after')
-    def process_paths(self):
-        fields = ['store_path', 'caches_path', 'data_path', 'misc_path', 'pre_output', 'output_path']
-        for field_key in fields:
-            field_value = getattr(self, field_key)
-            if not isinstance(field_value, str): continue
-            field_value = Path(field_value).expanduser()
-            if not field_value.is_absolute():
-                raise ValueError(f"The {field_key} must be an absolute path.")
-            setattr(self, field_key, field_value.resolve().as_posix())
-        return self
+    
+    pkg_root_path: PathConfig = PathConfig(path=resources.files(f'{proj.__name__}').joinpath('').resolve())
+    store_path: PathConfig
+    caches_path: PathConfig
+    data_path: PathConfig
+    misc_path: PathConfig
+    pre_output: PathConfig
+    output_path: PathConfig
+    
+    def get_path(self, field: str) -> Path:
+        field = getattr(self, field)
+        if field.parent: return self.get_path(f'{field.parent}_path') / field.path
+        else: return field.path
 
 # %%
 #|export
