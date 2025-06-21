@@ -55,3 +55,11 @@ adulib.llm.set_call_log_save_path(store_path / 'call_log.jsonl')
 # %%
 #|export
 load_dotenv()
+
+# %% [markdown]
+# Display all columns in Pandas output
+
+# %%
+#|export
+import pandas as pd
+pd.set_option('display.max_columns', None)
