@@ -33,8 +33,11 @@ from {{module_name_slug}}.config import get_config, update_config_from_pairs, va
 def entrypoint(
     ctx: typer.Context,
     config_path: str = typer.Option(None, "--config-path", help="Path to config file."),
-    config_mods: List[str] = typer.Option(None, "--config", "-c", help="Set config values. Use key=value pairs. Run `list-config` to see all available config variables.")
+    config_mods: List[str] = typer.Option(None, "--config", "-c", help="Set config values. Use key=value pairs. Run `list-config` to see all available config variables."),
+    env_path: Path = typer.Option(None, "--env", "-e", help="Set the path to a .env file."),
 ):
+    if env_path is not None:
+        load_dotenv(env_path, override=True)
     if config_path:
         load_config_from_path(config_path)
     if config_mods:
