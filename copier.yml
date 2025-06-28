@@ -18,6 +18,7 @@ initial_commit:
   when: false
 
 _tasks:
+  - "rm test_template.sh"
   - "uvx --from nblite nbl export --export-pipeline 'pts->nbs'"
   - "uvx --from nblite nbl export"
   - "uvx --from nblite nbl readme"
