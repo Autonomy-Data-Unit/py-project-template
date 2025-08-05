@@ -28,7 +28,7 @@ _tasks:
   - "git init"
   - "uvx --from nblite nbl install-hooks"
   - "ln -s {{ module_name_slug }}/assets/config.toml ."
-  - "source .venv/bin/activate && nbl prepare"
+  - ".venv/bin/nbl prepare"
   - command: "git add --all && git reset */_scratch */api/core"
     when: "{{ initial_commit }}"
   - command: "git commit -m 'Repo created from template'"
