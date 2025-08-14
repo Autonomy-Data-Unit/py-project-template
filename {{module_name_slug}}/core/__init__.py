@@ -10,8 +10,7 @@ def run_all():
         print(f"{'#' * (len(script_full_import_path)+4)}")
         print(f"# {script_full_import_path} #")
         print(f"{'#' * (len(script_full_import_path)+4)}")
-        if script_full_import_path in sys.modules:
-            module = importlib.import_module(script_full_import_path)
+        module_is_already_imported = script_full_import_path in sys.modules
+        module = importlib.import_module(script_full_import_path)
+        if module_is_already_imported:
             importlib.reload(module)
-        else:
-            importlib.import_module(script_full_import_path)

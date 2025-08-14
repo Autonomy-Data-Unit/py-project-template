@@ -2,7 +2,7 @@
 # # const
 
 # %%
-#|default_exp const
+#|default_exp const._const
 
 # %%
 #|hide
@@ -10,36 +10,45 @@ import nblite; from nbdev.showdoc import show_doc; nblite.nbl_export()
 
 # %%
 #|export
-from pathlib import Path
-import toml
-from typing import Optional
-from pydantic import BaseModel, ConfigDict, model_validator
-from pathlib import Path
-from importlib import resources
-import adulib, adulib.llm
+import adulib.llm
 from dotenv import load_dotenv
-import {{module_name_slug}} as proj
-
-# %%
-#|export
-from {{module_name_slug}}.config import PathConfig, Config, get_config
 
 # %% [markdown]
-# Set up paths
+# ## Load `config.toml`
 
 # %%
 #|export
-# Automaticlally set store paths based on the config
-config = get_config()
-for field in Config.model_fields:
-    if not issubclass(Config.model_fields[field].annotation, PathConfig): continue
-    locals()[field] = config.get_path(field)
-    locals()[field].mkdir(parents=True, exist_ok=True)
+import sys
+from {{module_name_slug}}.config import _loaded_config
+_loaded_config.impart(sys.modules[__name__])
+
+# %%
+print("Loaded config:")
+for k, v in _loaded_config.model_dump().items():
+    print(f"  {k}: {v}")
+
+# %% [markdown]
+# ## Miscellaneous setup and non-configurable constants
+
+# %% [markdown]
+# Set scripts and assets paths
 
 # %%
 #|export
-scripts_path = resources.files(f'{proj.__name__}').joinpath('scripts').resolve()
-assets_path = resources.files(f'{proj.__name__}').joinpath('assets').resolve()
+scripts_path = pkg_root_path / 'scripts'
+assets_path = pkg_root_path / 'assets'
+
+# %% [markdown]
+# Create folders if they do not exist 
+
+# %%
+#|export
+store_path.mkdir(parents=True, exist_ok=True)
+caches_path.mkdir(parents=True, exist_ok=True)
+data_path.mkdir(parents=True, exist_ok=True)
+misc_path.mkdir(parents=True, exist_ok=True)
+pre_output.mkdir(parents=True, exist_ok=True)
+output_path.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
 # Set up default caching and LLM call logging
@@ -54,7 +63,7 @@ adulib.llm.set_call_log_save_path(store_path / 'call_log.jsonl')
 
 # %%
 #|export
-load_dotenv(override=True)
+load_dotenv(dotenv_path=env_path, override=True)
 
 # %% [markdown]
 # Display all columns in Pandas output

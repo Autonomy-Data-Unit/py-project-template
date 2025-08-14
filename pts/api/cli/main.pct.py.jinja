@@ -16,12 +16,10 @@ from typing_extensions import Annotated
 from types import FunctionType
 from typing import Callable, Union, List
 from pathlib import Path
-import importlib
 
 import {{module_name_slug}} as proj
 from {{module_name_slug}} import const
 from {{module_name_slug}}.cli.app import app
-from {{module_name_slug}}.config import get_config, update_config_from_pairs, validate_config, load_config_from_path
 
 
 # %% [markdown]
@@ -34,20 +32,12 @@ def entrypoint(
     ctx: typer.Context,
     config_path: str = typer.Option(None, "--config-path", help="Path to config file."),
     config_mods: List[str] = typer.Option(None, "--config", "-c", help="Set config values. Use key=value pairs. Run `list-config` to see all available config variables."),
-    env_path: Path = typer.Option(None, "--env", "-e", help="Set the path to a .env file."),
 ):
-    if env_path is not None:
-        load_dotenv(env_path, override=True)
-    if config_path:
-        load_config_from_path(config_path)
-    if config_mods:
-        update_config_from_pairs(config_mods)
-    if config_path or config_mods:
-        validate_config()
-        importlib.reload(const)
+    if config_path is not None or config_mods is not None:
+        config_mods_dict = {k:v for k, v in (pair.split('=') for pair in config_mods)} if config_mods else None
+        const.load(config_path, config_mods_dict)
     if ctx.invoked_subcommand is None:
         typer.echo(ctx.get_help())
-
 
 # %%
 # !{{module_name}}
@@ -81,24 +71,22 @@ def cli_list_config(
     from rich.console import Console
     from rich.markup import escape
     from pydantic import BaseModel
+    from {{module_name_slug}}.config import Config
 
     table = Table(title=f"{proj.__name__} configuration schema")
 
     table.add_column("Config key", justify="left", style="cyan", no_wrap=True)
     table.add_column("Type", justify="left", style="magenta")
 
-    def add_fields(field_key_prefix, model_class):
-        for field_key, field_type in model_class.__annotations__.items():
-            if issubclass(field_type, BaseModel):
-                add_fields(field_key, field_type)
-                continue
-            _field_key = f'{field_key_prefix}.{field_key}' if field_key_prefix else field_key
-            table.add_row(escape(_field_key), escape(str(field_type)))
-
-    add_fields("", get_config().__class__)
+    for field_key, field_type in Config.__annotations__.items():
+        field_type_name = field_type.__name__ if hasattr(field_type, '__name__') else str(field_type)
+        table.add_row(escape(field_key), escape(field_type_name))
 
     console = Console()
     console.print(table)
+
+# %%
+# !{{module_name}} list-config
 
 # %%
 #|export
@@ -108,11 +96,11 @@ def cli_config_path(
     """
     Get the path to the configuration file.
     """
-    from {{module_name_slug}}.config import config_path
-    print(config_path)
+    from {{module_name_slug}}.config import _config_path
+    print(_config_path)
 
 # %%
-cli_list_config()
+# !{{module_name}} config-path
 
 # %% [markdown]
 # ## `a-sub-command`

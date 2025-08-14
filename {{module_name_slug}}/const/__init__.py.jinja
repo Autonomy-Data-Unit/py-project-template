@@ -1,0 +1,22 @@
+def load(config_path: str|None=None, config_data_mods: dict|None=None):
+    import importlib, sys
+    from {{module_name_slug}} import config
+    if config_path is not None:
+        import toml
+        _config_data = toml.load(config_path)
+        if config_data_mods is not None: _config_data = {**_config_data, **config_data_mods}
+        config._config_path = config_path
+        config._loaded_config = config.Config(**_config_data)
+    import_path = f"{__package__}._const"
+    const_is_already_imported = import_path in sys.modules
+    _const = importlib.import_module(import_path)
+    if const_is_already_imported:
+        importlib.reload(_const)
+        
+    # Impart all config and const values into this module
+    const = sys.modules[__name__]
+    config._loaded_config.impart(const)
+    for k in _const.__all__:
+        setattr(const, k, getattr(_const, k))
+        
+load()
