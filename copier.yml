@@ -22,6 +22,8 @@ _tasks:
   - "uvx --from nblite nbl export --export-pipeline 'pts->nbs'"
   - "uvx --from nblite nbl export"
   - "uvx --from nblite nbl readme"
+  - "uv add --dev jupyterlab nblite boto3"
+  - "uv add 'adulib[llm]' pydantic pandas python-dotenv rich toml typer"
   - "direnv allow"
   - "uv lock --upgrade"
   - "uv sync --all-extras"
@@ -34,4 +36,3 @@ _tasks:
     when: "{{ initial_commit }}"
   - command: "git commit -m 'Repo created from template'"
     when: "{{ initial_commit }}"
-  
