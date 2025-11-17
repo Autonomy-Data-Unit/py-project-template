@@ -22,7 +22,7 @@ _tasks:
   - "uvx --from nblite@latest nbl export --export-pipeline 'pts->nbs'"
   - "uvx --from nblite@latest nbl export"
   - "uvx --from nblite@latest nbl readme"
-  - "uv add --dev jupyterlab nblite@latest boto3"
+  - "uv add --dev jupyterlab nblite boto3"
   - "uv add 'adulib[llm]' pydantic pandas python-dotenv rich toml typer"
   - "direnv allow"
   - "uv lock --upgrade"
