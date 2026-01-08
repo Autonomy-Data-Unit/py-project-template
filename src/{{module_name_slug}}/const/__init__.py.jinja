@@ -16,7 +16,8 @@ def load(config_path: str|None=None, config_data_mods: dict|None=None):
     # Impart all config and const values into this module
     const = sys.modules[__name__]
     config._loaded_config.impart(const)
-    for k in _const.__all__:
+    const__all__ = _const.__all__ if hasattr(_const, '__all__') else []
+    for k in const__all__:
         setattr(const, k, getattr(_const, k))
         
 load()

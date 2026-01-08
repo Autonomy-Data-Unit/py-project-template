@@ -13,7 +13,7 @@ module_name_slug:
 
 _tasks:
   - "rm test_template.sh"
-  - "uvx --from nblite@latest nbl export --export-pipeline 'pts->nbs'"
+  - "uvx --from nblite@latest nbl export --pipeline 'pts->nbs'"
   - "uvx --from nblite@latest nbl export"
   - "uvx --from nblite@latest nbl readme"
   - "uv add --dev jupyterlab nblite boto3"
